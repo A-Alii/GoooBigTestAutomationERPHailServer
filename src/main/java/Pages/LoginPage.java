@@ -399,11 +399,13 @@ public class LoginPage extends TestBase {
     }
 
 
-    @FindBy(xpath = "//*[@id=\"login-container\"]/div[1]/div/div/div/div[2]/div/form/div[1]/input")
+    @FindBy(xpath = "//input[@placeholder='Username']")
     WebElement userName;
     @FindBy(id = "passwordInput")
     WebElement password;
-    @FindBy(xpath = "//*[@id=\"login-container\"]/div[1]/div/div/div/div[2]/div/form/div[3]/div[1]/div/label/input")
+    @FindBy(id = "passwordControl")
+    WebElement passwordControl;
+    @FindBy(xpath = "//input[@type='checkbox']")
     WebElement rememberMe;
     @FindBy(id = "login-submit")
     WebElement loginButton;
@@ -413,8 +415,35 @@ public class LoginPage extends TestBase {
         userName.sendKeys(name);
         password.click();
         password.sendKeys(pass);
+        passwordControl.click();
         rememberMe.click();
         loginButton.click();
     }
+
+    @FindBy(id = "kt_header_user_menu_toggle")
+    WebElement userMenuToggle;
+    @FindBy(xpath = "//div[contains(@class, 'fw-bold') and contains(@class, 'd-flex') and contains(@class, 'align-items-center') and contains(@class, 'fs-5')]")
+    WebElement UserNameLogged;
+
+    public boolean userMenuToggleExist(){
+        wait.until(ExpectedConditions.visibilityOf(userMenuToggle));
+        return userMenuToggle.isDisplayed();
+    }
+    public void clickOnUserMenuToggle(){
+        userMenuToggle.click();
+    }
+    public String getUserNameLogged(){
+        wait.until(ExpectedConditions.visibilityOf(UserNameLogged));
+        return UserNameLogged.getText();
+    }
+
+    @FindBy(xpath = "//span[@class='menu-title']")
+    WebElement MainPage;
+    public void clickOnMainPage(){
+        MainPage.click();
+    }
+
+
+
 
 }

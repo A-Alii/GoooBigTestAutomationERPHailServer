@@ -2,17 +2,20 @@ package TestCases;
 
 import Base.ProductsManagementTestProvider;
 import Base.TestBase;
+import GoooBigListener.TestListener;
 import Pages.ProductsManagement;
 import io.qameta.allure.Allure;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
+@Listeners(TestListener.class)
 public class ProductsManagementTest extends TestBase {
 
     public ProductsManagementTest() throws IOException {
@@ -21,6 +24,7 @@ public class ProductsManagementTest extends TestBase {
 
     public String UniteNameValue;
     ProductsManagement productsManagement ;
+    public boolean previousTestFailed;
 
     @BeforeMethod
     public void beforeMethod() throws IOException {
@@ -163,15 +167,79 @@ public class ProductsManagementTest extends TestBase {
         System.out.println(DetailName);
         if (useFirstLevel) {
             productsManagement.clickIsFirstLevel();
+            productsManagement.sendDetailDescription1(DetailDescription);
         } else {
             productsManagement.clickIsFirstLevel2();
             if (TopData != null) {
                 productsManagement.sendTopField(TopData);
+                productsManagement.sendDetailDescription2(DetailDescription);
             }
         }
-        /*productsManagement.sendDetailDescription(DetailDescription);
         Allure.addAttachment("Test Output", "text/plain", "Page Data Found Is: " + DetailDescription);
-        System.out.println(DetailDescription);*/
+        System.out.println(DetailDescription);
         productsManagement.clickSaveDetail();
     }
+
+    @Test(priority = 10)
+    public void clickOnPackageNotes() throws IOException, InterruptedException {
+        productsManagement.scrollToPackagesSidebar();
+        Thread.sleep(1000);
+        productsManagement.clickPackagesNote();
+        Thread.sleep(1000);
+        productsManagement.clickAddNewPackageNote();
+    }
+
+    @Test(priority = 11)
+    public void AddNewPackageDetailWithEmptyData() throws IOException, InterruptedException {
+        productsManagement.clickSavePackageNote();
+        Thread.sleep(1000);
+        Assert.assertTrue(productsManagement.isErrorPopUp());
+        String errorPopUp = productsManagement.getErrorPopUp();
+        System.out.println(errorPopUp);
+        Assert.assertTrue(errorPopUp.contains("يرجى إكمال الحقول"));
+        productsManagement.clickCloseErrorPopUp();
+        productsManagement.clickCancel();
+    }
+
+    @Test(priority = 12, dataProvider = "PackageDetails", dataProviderClass = ProductsManagementTestProvider.class) // Reference the data provider class
+    public void AddNewPackagesDetailWithValidData(String Note) throws IOException, InterruptedException {
+        productsManagement.clickAddNewPackageNote();
+        productsManagement.sendPackagesNotes(Note);
+        productsManagement.clickSavePackageNote();
+    }
+
+    @Test(priority = 13)
+    public void PackagesGroup() throws IOException, InterruptedException {
+        productsManagement.scrollToPackagesSidebar();
+        productsManagement.clickGuaranteePlans();
+    }
+
+    @Test(priority = 14)
+    public void AddNewGuaranteeGroupWithEmptyData() throws IOException, InterruptedException {
+        productsManagement.clickAddNewGuaranteePlan();
+        productsManagement.clickSaveGuaranteePlan();
+        Thread.sleep(1000);
+        Assert.assertTrue(productsManagement.isErrorPopUp());
+        String errorPopUp = productsManagement.getErrorPopUp();
+        System.out.println(errorPopUp);
+        Assert.assertTrue(errorPopUp.contains("يرجى إكمال الحقول"));
+        productsManagement.clickCloseErrorPopUp();
+        productsManagement.clickCancelGuaranteePlan();
+    }
+
+    @Test(priority = 15)
+    public void AddNewGuaranteeGroupWithInValidData() throws IOException, InterruptedException {
+        try{
+            productsManagement.clickAddNewGuaranteePlan();
+            productsManagement.sendGuaranteePlanName("Guarantee Plan");
+            productsManagement.clickSaveGuaranteePlan();
+            Assert.assertTrue(productsManagement.isErrorPopUp(), "Should be an error pop up");
+            previousTestFailed = false;
+        }catch (AssertionError | Exception e) {
+            previousTestFailed = true; // Test failed
+            throw e;
+        }
+    }
+
+
 }

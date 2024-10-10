@@ -2,12 +2,14 @@ package Pages;
 
 import Base.TestBase;
 import org.apache.xmlbeans.impl.xb.xsdschema.Public;
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
@@ -314,13 +316,21 @@ public class ProductsManagement extends TestBase {
         IsFirstLevel2.click();
     }
 
+    @FindBy(xpath = "//*[@id=\"primarydata\"]/div/div/div/div[3]/div/textarea")
+    WebElement DetailDescription1;
     @FindBy(xpath = "//*[@id=\"primarydata\"]/div/div/div/div[4]/div/textarea")
-    WebElement DetailDescription;
-    public void sendDetailDescription(String DetailDescription) {
-        js.executeScript("arguments[0].scrollIntoView(true);", this.DetailDescription);
-        actions.moveToElement(this.DetailDescription).perform();
-        this.DetailDescription.click();
-        this.DetailDescription.sendKeys(DetailDescription);
+    WebElement DetailDescription2;
+    public void sendDetailDescription1(String DetailDescription) {
+        js.executeScript("arguments[0].scrollIntoView(true);", this.DetailDescription1);
+        actions.moveToElement(this.DetailDescription1).perform();
+        this.DetailDescription1.click();
+        this.DetailDescription1.sendKeys(DetailDescription);
+    }
+    public void sendDetailDescription2(String DetailDescription) {
+        js.executeScript("arguments[0].scrollIntoView(true);", this.DetailDescription2);
+        actions.moveToElement(this.DetailDescription2).perform();
+        this.DetailDescription2.click();
+        this.DetailDescription2.sendKeys(DetailDescription);
     }
 
     @FindBy(xpath = "//*[@id=\"kt_app_content\"]/div[2]/div/div/div[1]/div/div/button[1]")
@@ -342,5 +352,157 @@ public class ProductsManagement extends TestBase {
         this.TopField.sendKeys(topFieldValue);
         Enter.click();
     }
+
+    @FindBy(xpath = "//span[contains(text(), 'ملاحظات المنتجات')]")
+    WebElement packagesNote;
+
+    @FindBy(id = "kt_app_sidebar_menu_wrapper") // Adjusted to match the ID in your DOM
+    WebElement sidebar;
+
+    public void scrollToPackagesSidebar() {
+        // Wait for the sidebar to be visible
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.visibilityOf(sidebar));
+
+        // Scroll the sidebar to the packagesNote element
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollTop = arguments[0].scrollHeight;", sidebar);
+        // Scroll up to the element using JavaScript
+        js.executeScript("window.scrollTo(0, -20);", sidebar);  // Scroll to the top of the page
+    }
+    public void clickPackagesNote() {
+        // Wait for the packagesNote element to be present
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[contains(text(), 'ملاحظات المنتجات')]")));
+
+        // Scroll into view for the packagesNote element
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", packagesNote);
+
+        // Optional: Wait for the element to become clickable
+        wait.until(ExpectedConditions.elementToBeClickable(packagesNote));
+        // Click on the element
+        packagesNote.click();
+    }
+
+    @FindBy(xpath = "//*[@type='reset']")
+    WebElement CancelButton;
+    public void clickOnCancelDetail() {
+        CancelButton.click();
+    }
+
+    @FindBy(xpath = "//*[@id=\"kt_app_content\"]/div[2]/div/div/div[2]/div/div/button[1]")
+    WebElement AddNewPackageDetail;
+    public void clickAddNewPackageNote() {
+        AddNewPackageDetail.click();
+    }
+
+    @FindBy(xpath = "//*[@id=\"kt_app_content\"]/div[2]/div/div/div[1]/div/div/button[1]")
+    WebElement SavePackageDetail;
+    public void clickSavePackageNote() {
+        // Click the element
+        SavePackageDetail.click();
+    }
+
+    @FindBy(xpath = "//*[@id=\"kt_app_body\"]/div[3]/div/div[3]/div[2]/div/div/p")
+    WebElement errorPopUp;
+    public boolean isErrorPopUp() {
+        return errorPopUp.isDisplayed();
+    }
+    public String getErrorPopUp() {
+        return errorPopUp.getText().trim();
+    }
+
+    @FindBy(xpath = "//*[@id=\"kt_app_body\"]/div[3]/div/div[3]/div[2]/div/div/button")
+    WebElement closeErrorPopUp;
+    public void clickCloseErrorPopUp() {
+        closeErrorPopUp.click();
+    }
+
+    @FindBy(tagName = "textarea")
+    WebElement PackagesNotes;
+    public void sendPackagesNotes(String PackagesNotes) {
+        this.PackagesNotes.click();
+        this.PackagesNotes.sendKeys(PackagesNotes);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////'
+    /* خطط الضمان */
+
+    @FindBy(xpath = "//span[contains(text(), 'خطط الضمان')]")
+    WebElement GuaranteePlans;
+    public void clickGuaranteePlans() {
+        GuaranteePlans.click();
+    }
+
+    @FindBy(xpath = "//*[@id=\"kt_app_content\"]/div[2]/div/div/div[2]/div/div/button[1]")
+    WebElement AddNewGuaranteePlan;
+    public void clickAddNewGuaranteePlan() {
+        AddNewGuaranteePlan.click();
+    }
+
+    @FindBy(xpath = "//*[@id=\"kt_app_content\"]/div[2]/div/div/div[1]/div/div/button[1]")
+    WebElement SaveGuaranteePlan;
+    public void clickSaveGuaranteePlan() {
+        SaveGuaranteePlan.click();
+    }
+
+    @FindBy(xpath = "//*[@id=\"kt_app_content\"]/div[2]/div/div/div[1]/div/div/button[2]")
+    WebElement CancelGuaranteePlan;
+    public void clickCancelGuaranteePlan() {
+        CancelGuaranteePlan.click();
+    }
+
+    @FindBy(xpath = "//*[@id=\"primarydata\"]/div/div/div/div[1]/div[1]/input")
+    WebElement GuaranteePlanName;
+    public void sendGuaranteePlanName(String GuaranteePlanName) {
+        this.GuaranteePlanName.click();
+        this.GuaranteePlanName.sendKeys(GuaranteePlanName);
+    }
+
+    @FindBy(xpath = "//*[@id=\"primarydata\"]/div/div/div/div[2]/div/input")
+    WebElement GuaranteePlanPeriod;
+    public void sendGuaranteePlanPeriod(String GuaranteePlanPeriod) {
+        this.GuaranteePlanPeriod.click();
+        this.GuaranteePlanPeriod.sendKeys(GuaranteePlanPeriod);
+    }
+
+    @FindBy(xpath = "//*[@id=\"primarydata\"]/div/div/div/div[3]/div/input")
+    WebElement AgentName;
+    public void sendAgentName(String AgentName) {
+        this.AgentName.click();
+        this.AgentName.sendKeys(AgentName);
+    }
+
+    @FindBy(xpath = "//*[@id=\"Smart0HN6CE14G8NJMTextArea\"]")
+    WebElement GuaranteePlanNote;
+    public void sendGuaranteePlanNote(String GuaranteePlanNote) {
+        actions.moveToElement(this.GuaranteePlanNote).perform();
+        this.GuaranteePlanNote.click();
+        this.GuaranteePlanNote.sendKeys(GuaranteePlanNote);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

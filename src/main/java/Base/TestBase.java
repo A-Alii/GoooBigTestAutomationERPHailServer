@@ -1,6 +1,7 @@
 package Base;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -36,9 +37,12 @@ public class TestBase {
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
         //driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        driver.get("https://myportal.gooobig.sa/login");
+        driver.get("https://erp.hailmpcs.sa/login");
         String title = driver.getTitle();
         System.out.println(title);
+
+        // Set the zoom level to 70%
+        ((JavascriptExecutor) driver).executeScript("document.body.style.zoom='70%'");
 
         // Introduce a random delay before interacting with the page
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
